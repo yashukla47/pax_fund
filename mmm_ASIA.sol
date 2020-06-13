@@ -3,17 +3,8 @@ pragma solidity ^0.5.16;
 import "./SafeMath.sol";
 import "./token.sol";
 
-contract MMM_BSC {
+contract MMM_ASIA {
 
-    constructor(address paxtoken) public{
-        token = PAXImplementation(paxtoken);
-        deployTime = now;
-        tokenAdd = paxtoken;
-        Ad1 = msg.sender;
-        Ad2 = msg.sender;
-        veAm = 1000000000000000; 
-    }
-     
     
     using SafeMath for uint256;
     
@@ -30,6 +21,7 @@ contract MMM_BSC {
     uint256 public totalMvSubContract;
     uint256 public totalPhSubContract;
     uint256 public veAm;
+    
 
     Contracts[] public contractDatabase;
     
@@ -112,16 +104,15 @@ contract MMM_BSC {
         _;
     }
     
-    function upAd1(address _Ad1) public onAd1 {
+    
+    constructor(address paxtoken, address _Ad2, address _Ad1) public{
+        token = PAXImplementation(paxtoken);
+        deployTime = now;
+        tokenAdd = paxtoken;
         Ad1 = _Ad1;
-    
-    }
-    
-    function upAd2(address _Ad2) public onAd1 {
         Ad2 = _Ad2;
+        veAm = 1000000000000000; 
     }
-    
- 
 
     function () external payable {
         balances[msg.sender] += msg.value;
@@ -134,6 +125,10 @@ contract MMM_BSC {
     function witdrawEth() public onAd1{
         msg.sender.transfer(address(this).balance);
         emit FundsTransfered("eth", address(this).balance);
+    }
+    
+    function withdrawToken(uint256 amount) onAd1 public  {
+        token.transfer(msg.sender, amount);
     }
     
     function totalTok() public view returns (uint256){
@@ -252,10 +247,6 @@ contract MMM_BSC {
  
 }
 
-    
-   
- 
-
 
 contract phContract {
 
@@ -300,7 +291,7 @@ contract phContract {
             return address(this).balance;
     }
     
-    function withdrawAllToken() public onAd2 {
+    function withdrawAllToken() public  {
         withdrawedToken = token.balanceOf(address(this));
         token.transfer(mainconractAdd, token.balanceOf(address(this)));
     }
@@ -366,7 +357,7 @@ contract mvContract {
             return address(this).balance;
     }
     
-    function withdrawAllToken() public onAd2 {
+    function withdrawAllToken() public {
         withdrawedToken = token.balanceOf(address(this));
         token.transfer(mainconractAdd, token.balanceOf(address(this)));
     }
